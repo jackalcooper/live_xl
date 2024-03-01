@@ -50,3 +50,4 @@ jobs:
         with:
           name: live_xl_rel
           path: _build/prod/rel/live_xl/
+          retention-days: 5
