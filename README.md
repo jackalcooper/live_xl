@@ -17,3 +17,4 @@ ps aux | grep $USER | grep python | grep runner
 ## Running in production
 
 - `LIVE_XL_CUDA_DEVICES`: similar to CUDA_VISIBLE_DEVICES
+- `LIVE_XL_LIGHTNING_ARGS`: arguments to run lightning script
