@@ -100,3 +100,29 @@ if config_env() == :prod do
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 end
+
+cuda_dev_ids_str =
+  System.get_env("LIVE_XL_CUDA_DEVICES") ||
+    if nvidia_smi = System.find_executable("nvidia-smi") do
+      {output, 0} = System.cmd(nvidia_smi, ["--query-gpu=index", "--format=csv,noheader"])
+      output
+    end
+
+if cuda_dev_ids_str do
+  available_gpu_ids =
+    cuda_dev_ids_str
+    |> String.split([" ", ",", "\n"], trim: true)
+    |> Enum.reduce([], fn device_str, acc ->
+      case Integer.parse(device_str) do
+        {num, _} -> [num | acc]
+        _ -> acc
+      end
+    end)
+    |> Enum.sort()
+
+  config :live_xl, LiveXL.WorkerPool, available_gpu_ids: available_gpu_ids
+end
+
+if s = System.get_env("LIVE_XL_LIGHTNING_ARGS") do
+  config :live_xl, LiveXL.Infer, lightning_args: String.split(s, [" ", "\n"], trim: true)
+end
