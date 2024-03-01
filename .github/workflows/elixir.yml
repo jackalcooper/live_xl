@@ -46,3 +46,7 @@ jobs:
           mix assets.deploy
           mix phx.gen.release
           mix release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: live_xl_rel
+          path: _build/prod/rel/live_xl/
