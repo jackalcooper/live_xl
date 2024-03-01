@@ -16,7 +16,11 @@ defmodule LiveXL.Application do
       # Start a worker by calling: LiveXL.Worker.start_link(arg)
       # {LiveXL.Worker, arg},
       # Start to serve requests, typically the last entry
-      LiveXLWeb.Endpoint
+      LiveXLWeb.Endpoint,
+      {NimblePool,
+       worker: {LiveXL.WorkerPool, :python_runner},
+       name: PythonWorkerPool,
+       pool_size: Enum.count(LiveXL.WorkerPool.available_gpu_ids())}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

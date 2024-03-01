@@ -46,7 +46,7 @@ config :live_xl, LiveXLWeb.Endpoint,
 config :live_xl, LiveXLWeb.Endpoint,
   live_reload: [
     patterns: [
-      ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"priv/static/(?!uploads/|generated/).*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
       ~r"lib/live_xl_web/(controllers|live|components)/.*(ex|heex)$"
     ]
@@ -70,3 +70,4 @@ config :phoenix_live_view, :debug_heex_annotations, true
 
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
+config :live_xl, LiveXL.WorkerPool, available_gpu_ids: 0..7

@@ -18,3 +18,5 @@ config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :live_xl, LiveXL.WorkerPool, available_gpu_ids: 0..3
