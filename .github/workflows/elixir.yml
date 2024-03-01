@@ -12,6 +12,10 @@ on:
     branches: ["main"]
   workflow_dispatch:
 
+concurrency:
+  group: live-xl-build-test-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -51,7 +55,9 @@ jobs:
         run: |
           formatted_date=$(date +'%Y%m%d%H%M')
           archive_file="live_xl_rel_${formatted_date}.tar"
-          tar -cvf ${archive_file} _build/prod/rel/live_xl
+          archive_file_full="${PWD}/live_xl_rel_${formatted_date}.tar"
+          cd _build/prod/rel
+          tar -cvf ${archive_file_full} live_xl
           echo "archive_file=${archive_file}" >> $GITHUB_OUTPUT
       - uses: actions/upload-artifact@v4
         with:
