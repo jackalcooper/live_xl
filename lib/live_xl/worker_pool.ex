@@ -59,7 +59,7 @@ defmodule LiveXL.WorkerPool do
        port =
          LiveXL.Infer.start_py(
            args:
-             ~w{--base /share_nfs/hf_models/stable-diffusion-xl-base-1.0 --repo /share_nfs/hf_models/SDXL-Lightning --cpkt sdxl_lightning_2step_unet.safetensors} ++
+             LiveXL.Infer.lightning_args() ++
                opts[:args],
            env: [{~c"CUDA_VISIBLE_DEVICES", ~c"#{gpu_id}"}]
          )

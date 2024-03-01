@@ -14,6 +14,16 @@ defmodule LiveXL.Infer do
     ])
   end
 
+  def lightning_args() do
+    with {:ok, v} <- Application.fetch_env(:live_xl, __MODULE__),
+         true <- Keyword.has_key?(v, :lightning_args) do
+      v[:lightning_args]
+    else
+      _ ->
+        ~w{--base /share_nfs/hf_models/stable-diffusion-xl-base-1.0 --repo /share_nfs/hf_models/SDXL-Lightning --cpkt sdxl_lightning_2step_unet.safetensors}
+    end
+  end
+
   @doc """
   sync a pool to unsure python side is ready for receiving actions
   """

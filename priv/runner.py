@@ -25,9 +25,12 @@ else:
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--mock_sleep_seconds", type=int, default=1, required=False)
-    args, _unknown = parser.parse_known_args()
+    args, unknown_args = parser.parse_known_args()
+    unknown_args = " ".join(unknown_args)
     sleep_seconds = args.mock_sleep_seconds
-    print(f"Simulate timeout by sleeping {sleep_seconds} seconds")
+    print(
+        f"Simulate timeout by sleeping {sleep_seconds} seconds, ignoring args: {unknown_args}"
+    )
     sleep(sleep_seconds)
 
 
