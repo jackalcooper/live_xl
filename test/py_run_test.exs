@@ -37,7 +37,7 @@ defmodule LiveXLWeb.PyRunTest do
       {NimblePool,
        worker:
          {WorkerPool,
-          {:python_runner, args: ~w{--mac_sleep_seconds=2}, available_gpu_ids: available_gpu_ids}},
+          {:python_runner, args: ~w{--mock_sleep_seconds=2}, available_gpu_ids: available_gpu_ids}},
        name: pool,
        pool_size: Enum.count(available_gpu_ids)}
 
