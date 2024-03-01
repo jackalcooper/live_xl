@@ -15,17 +15,18 @@ log_with_prefix("starting")
 import time
 from time import sleep
 import platform
+import shutil
 
-if platform.system() == "Linux":
+if platform.system() == "Linux" and shutil.which("nvidia-smi") != None:
     import lightning
     import torch
 else:
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mac_sleep_seconds", type=int, default=1, required=False)
+    parser.add_argument("--mock_sleep_seconds", type=int, default=1, required=False)
     args, _unknown = parser.parse_known_args()
-    sleep_seconds = args.mac_sleep_seconds
+    sleep_seconds = args.mock_sleep_seconds
     print(f"Simulate timeout by sleeping {sleep_seconds} seconds")
     sleep(sleep_seconds)
 
