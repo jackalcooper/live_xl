@@ -20,7 +20,7 @@ defmodule LiveXL.Infer do
       v[:lightning_args]
     else
       _ ->
-        ~w{--base /share_nfs/hf_models/stable-diffusion-xl-base-1.0 --repo /share_nfs/hf_models/SDXL-Lightning --cpkt sdxl_lightning_2step_unet.safetensors}
+        ~w{--base /share_nfs/hf_models/stable-diffusion-xl-base-1.0 --repo /share_nfs/hf_models/SDXL-Lightning --cpkt sdxl_lightning_2step_unet.safetensors --save_graph --load_graph}
     end
   end
 
