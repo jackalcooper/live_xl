@@ -35,6 +35,7 @@ if config_env() == :prod do
 
   host = System.get_env("PHX_HOST") || "example.com"
   scheme = System.get_env("PHX_SCHEME") || "https"
+  phx_port = System.get_env("PHX_PORT") || "4000"
   port = String.to_integer(System.get_env("PORT") || "4000")
 
   config :live_xl, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
