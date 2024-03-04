@@ -44,7 +44,6 @@ defmodule LiveXL.WorkerPool do
   end
 
   def init_pool({:python_runner, opts}) do
-    opts = opts |> Keyword.put_new(:args, [])
     available_gpu_ids = opts[:available_gpu_ids] || available_gpu_ids()
     gpus = Map.new(available_gpu_ids, &{&1, :stopped})
     {:ok, %State{gpus: gpus, opts: opts}}
@@ -58,9 +57,7 @@ defmodule LiveXL.WorkerPool do
      fn ->
        port =
          LiveXL.Infer.start_py(
-           args:
-             LiveXL.Infer.lightning_args() ++
-               opts[:args],
+           args: LiveXL.Infer.lightning_args() ++ (opts[:args] || []),
            env: [{~c"CUDA_VISIBLE_DEVICES", ~c"#{gpu_id}"}]
          )
          |> LiveXL.Infer.sync("[gpu##{gpu_id}] syncing script start")
@@ -97,8 +94,16 @@ defmodule LiveXL.WorkerPool do
   # On terminate, effectively close it
   def terminate_worker(reason, {id, port}, pool_state) do
     Logger.info("terminating worker ##{id}, reason: #{reason}")
-    Port.close(port)
-    Logger.info("worker terminated")
+
+    try do
+      Port.close(port)
+    rescue
+      ArgumentError ->
+        Logger.error("Failed to terminate worker ##{id}. The process might exit already")
+    else
+      _ -> Logger.info("worker terminated")
+    end
+
     {:ok, State.release_slot(pool_state, id)}
   end
 end

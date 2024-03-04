@@ -90,6 +90,8 @@ if __name__ == "__main__":
                 },
                 output,
             )  # echo the message back
+        elif "action" in message and message["action"] == "crash":
+            raise RuntimeError("crash to debug fault tolerance")
         elif (
             "action" in message
             and message["action"] == "infer_lightning"

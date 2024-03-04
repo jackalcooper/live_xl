@@ -43,7 +43,7 @@ defmodule LiveXL.WorkerClient do
         end
     after
       receive_timeout ->
-        Logger.error("[timeout] cmd: #{inspect(command)}")
+        Logger.error("[timeout] cmd: #{command}")
         exit(:receive_timeout)
     end
   end
