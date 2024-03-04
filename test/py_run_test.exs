@@ -6,7 +6,7 @@ defmodule LiveXLWeb.PyRunTest do
     msg = %{
       action: :echo,
       ref: "cat",
-      payload: %{"prompt" => "dog", "seed" => 44}
+      payload: %{"prompt" => "dog", "seed" => 88}
     }
 
     res = LiveXL.Infer.run(msg)
@@ -46,7 +46,7 @@ defmodule LiveXLWeb.PyRunTest do
     msg = %{
       action: :echo,
       ref: inspect(make_ref()),
-      payload: %{"prompt" => "dog", "seed" => 44}
+      payload: %{"prompt" => "dog", "seed" => 88}
     }
 
     assert catch_exit(
@@ -72,7 +72,7 @@ defmodule LiveXLWeb.PyRunTest do
     msg = %{
       action: :echo,
       ref: inspect(make_ref()),
-      payload: %{"prompt" => "dog", "seed" => 44}
+      payload: %{"prompt" => "dog", "seed" => 88}
     }
 
     for _ <- 0..10 do
@@ -83,7 +83,7 @@ defmodule LiveXLWeb.PyRunTest do
     end
 
     for _ <- 0..10 do
-      assert %{"prompt" => "dog", "seed" => 44} ==
+      assert %{"prompt" => "dog", "seed" => 88} ==
                LiveXL.WorkerClient.command(pool, msg)["payload"]
     end
   end
