@@ -18,8 +18,15 @@ import platform
 import shutil
 
 if platform.system() == "Linux" and shutil.which("nvidia-smi") != None:
-    import lightning
-    import torch
+    try:
+        import lightning
+        import torch
+    except Exception:
+        import traceback
+
+        print("Failed to initialize lightning or torch.")
+        full_traceback = traceback.format_exc()
+        print(full_traceback)
 else:
     import argparse
 
