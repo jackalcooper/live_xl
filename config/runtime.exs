@@ -36,6 +36,7 @@ if config_env() == :prod do
   host = System.get_env("PHX_HOST")
   phx_port = System.get_env("PHX_PORT")
   scheme = System.get_env("PHX_SCHEME")
+  check_origin = System.get_env("PHX_CHECK_ORIGIN") in ~w{1 true True}
   port = String.to_integer(System.get_env("PORT") || "4000")
 
   config :live_xl, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
@@ -50,6 +51,7 @@ if config_env() == :prod do
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: port
     ],
+    check_origin: check_origin,
     secret_key_base: secret_key_base
 
   # ## SSL Support
