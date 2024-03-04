@@ -102,6 +102,7 @@ if args.compile:
     if args.load_graph:
         logger.info("Loading graphs...")
         load_pipe(pipe, args.load_graph_dir)
+        logger.info(f"Graphs load from {args.load_graph_dir}")
 
 logger.info("Warmup with running graphs...")
 torch.manual_seed(args.seed)
