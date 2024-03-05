@@ -57,8 +57,8 @@ jobs:
         id: archive
         run: |
           formatted_date=$(date +'%Y%m%d%H%M')
-          archive_file="live_xl_rel_${formatted_date}.tar"
-          archive_file_full="${PWD}/live_xl_rel_${{ matrix.runs-on }}_${formatted_date}.tar"
+          archive_file="live_xl_rel_${{ matrix.runs-on }}_${formatted_date}.tar"
+          archive_file_full="${PWD}/${archive_file}"
           cd _build/prod/rel
           tar -cvf ${archive_file_full} live_xl
           echo "archive_file=${archive_file}" >> $GITHUB_OUTPUT
