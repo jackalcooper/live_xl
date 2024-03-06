@@ -35,7 +35,7 @@ if config_env() == :prod do
 
   host = System.get_env("PHX_HOST") || "example.com"
   port = String.to_integer(System.get_env("PORT") || "4000")
-  check_origin = String.to_integer(System.get_env("PHX_CHECK_ORIGIN") in ~w{1 True true})
+  check_origin = System.get_env("PHX_CHECK_ORIGIN") in ~w{1 True true}
 
   config :live_xl, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
