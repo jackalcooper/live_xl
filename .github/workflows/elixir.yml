@@ -69,7 +69,7 @@ jobs:
           retention-days: 5
       - name: Release current commit
         uses: ncipollo/release-action@v1.12.0
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/add-release'
+        if: github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'publish_release')
         with:
           artifacts: ${{ steps.archive.outputs.archive_file }}
           token: "${{ secrets.GITHUB_TOKEN }}"
