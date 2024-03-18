@@ -35,3 +35,4 @@ live_xl-*.tar
 npm-debug.log
 /assets/node_modules/
 
+cached_pipe/

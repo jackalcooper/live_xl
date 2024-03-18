@@ -1,6 +1,7 @@
 defmodule LiveXLWeb.PromptLive do
   # In Phoenix v1.6+ apps, the line is typically: use MyAppWeb, :live_view
   use Phoenix.LiveView
+  require Logger
 
   attr :field, Phoenix.HTML.FormField
   attr :class, :string
@@ -108,6 +109,10 @@ defmodule LiveXLWeb.PromptLive do
             "inference_time" => inference_time
           }}} ->
           {e2e_time, inference_time, target_image_url}
+
+        {{:unix, :linux}, {retcode, %{"action" => "reply", "error" => error}}} when retcode > 0 ->
+          Logger.error(error)
+          {0.0, 0.0, ~p"/images/onediff_logo.png"}
       end
 
     form = form |> Phoenix.Component.to_form()
