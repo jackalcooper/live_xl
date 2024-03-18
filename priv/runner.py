@@ -101,7 +101,6 @@ if __name__ == "__main__":
                 args = message["payload"]["args"]
                 seed = args.pop("seed", 1)
                 saved_image = args.pop("saved_image")
-                args.pop("_target", "")
                 args["generator"] = torch.Generator(device="cuda").manual_seed(seed)
                 start_time = time.time()
                 images = lightning.pipe(**args).images

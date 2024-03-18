@@ -80,6 +80,10 @@ defmodule LiveXLWeb.PromptLive do
 
     args =
       args
+      |> Map.reject(fn
+        {k, _} when is_bitstring(k) -> String.starts_with?(k, "_")
+        _ -> false
+      end)
       |> Map.put("saved_image", saved_image)
       |> Map.put("seed", seed)
       |> Map.put("num_inference_steps", 2)
