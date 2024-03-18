@@ -17,12 +17,16 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  id-token: write
+  contents: write
 
 jobs:
   build:
     name: Build and test
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      matrix:
+        runs-on: ["ubuntu-22.04", "ubuntu-20.04"]
 
     steps:
       - uses: actions/checkout@v4
@@ -54,8 +58,8 @@ jobs:
         id: archive
         run: |
           formatted_date=$(date +'%Y%m%d%H%M')
-          archive_file="live_xl_rel_${formatted_date}.tar"
-          archive_file_full="${PWD}/live_xl_rel_${formatted_date}.tar"
+          archive_file="live_xl_rel_${{ matrix.runs-on }}_${formatted_date}.tar"
+          archive_file_full="${PWD}/${archive_file}"
           cd _build/prod/rel
           tar -cvf ${archive_file_full} live_xl
           echo "archive_file=${archive_file}" >> $GITHUB_OUTPUT
@@ -64,3 +68,15 @@ jobs:
           name: ${{ steps.archive.outputs.archive_file }}
           path: ${{ steps.archive.outputs.archive_file }}
           retention-days: 5
+      - name: Release current commit
+        uses: ncipollo/release-action@v1.12.0
+        if: github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'publish_release')
+        with:
+          artifacts: ${{ steps.archive.outputs.archive_file }}
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          tag: "latest"
+          name: "latest"
+          removeArtifacts: false
+          allowUpdates: true
+          replacesArtifacts: true
+          makeLatest: true
