@@ -58,9 +58,10 @@ if config_env() == :prod do
     secret_key_base: secret_key_base
 
   if repo_name = System.get_env("SPACE_REPO_NAME") do
-    "#{System.get_env("SPACE_AUTHOR_NAME")}-#{repo_name}.hf.space"
-    |> String.replace("_", "-")
-    |> String.downcase(:ascii)
+    host =
+      "#{System.get_env("SPACE_AUTHOR_NAME")}-#{repo_name}.hf.space"
+      |> String.replace("_", "-")
+      |> String.downcase(:ascii)
 
     Application.put_env(:live_xl, PhoenixDemo.Endpoint,
       url: [host: host],
