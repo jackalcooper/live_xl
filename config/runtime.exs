@@ -57,6 +57,22 @@ if config_env() == :prod do
     check_origin: check_origin,
     secret_key_base: secret_key_base
 
+  if repo_name = System.get_env("SPACE_REPO_NAME") do
+    host =
+      "#{System.get_env("SPACE_AUTHOR_NAME")}-#{repo_name}.hf.space"
+      |> String.replace("_", "-")
+      |> String.downcase(:ascii)
+
+    Application.put_env(:live_xl, PhoenixDemo.Endpoint,
+      url: [host: host],
+      http: [
+        ip: {0, 0, 0, 0, 0, 0, 0, 0},
+        port: String.to_integer(System.get_env("PORT") || "4000"),
+        transport_options: [socket_opts: [:inet6]]
+      ]
+    )
+  end
+
   # ## SSL Support
   #
   # To get SSL working, you will need to add the `https` key
