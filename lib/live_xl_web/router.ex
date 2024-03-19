@@ -8,6 +8,7 @@ defmodule LiveXLWeb.Router do
     plug :put_root_layout, html: {LiveXLWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :within_iframe_secure_headers
   end
 
   pipeline :api do
@@ -46,5 +47,9 @@ defmodule LiveXLWeb.Router do
       live_dashboard "/dashboard", metrics: LiveXLWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  defp within_iframe_secure_headers(conn, _opts) do
+    delete_resp_header(conn, "x-frame-options")
   end
 end
