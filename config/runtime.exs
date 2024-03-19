@@ -62,7 +62,7 @@ if config_env() == :prod do
     |> String.replace("_", "-")
     |> String.downcase(:ascii)
 
-    Application.put_env(:phoenix_demo, PhoenixDemo.Endpoint,
+    Application.put_env(:live_xl, PhoenixDemo.Endpoint,
       url: [host: host],
       http: [
         ip: {0, 0, 0, 0, 0, 0, 0, 0},
