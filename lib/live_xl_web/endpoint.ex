@@ -8,7 +8,7 @@ defmodule LiveXLWeb.Endpoint do
     store: :cookie,
     key: "_live_xl_key",
     signing_salt: "zuqpSvPl",
-    same_site: "Lax"
+    same_site: "None"
   ]
 
   socket "/live", Phoenix.LiveView.Socket,
