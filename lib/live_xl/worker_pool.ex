@@ -34,7 +34,7 @@ defmodule LiveXL.WorkerPool do
          true <- Keyword.has_key?(v, :available_gpu_ids) do
       v[:available_gpu_ids]
     else
-      _ -> []
+      _ -> 0..1
     end
   end
 
