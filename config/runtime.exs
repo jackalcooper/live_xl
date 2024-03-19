@@ -33,7 +33,6 @@ if config_env() == :prod do
       You can generate one by calling: mix phx.gen.secret
       """
 
-  host = System.get_env("PHX_HOST")
   phx_port = System.get_env("PHX_PORT")
   scheme = System.get_env("PHX_SCHEME")
   check_origin = System.get_env("PHX_CHECK_ORIGIN") in ~w{1 true True}
@@ -41,8 +40,12 @@ if config_env() == :prod do
 
   config :live_xl, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
+  if host = System.get_env("PHX_HOST") do
+    config :live_xl, LiveXLWeb.Endpoint,
+      url: [host: host || "example.com", port: phx_port || 443, scheme: scheme || "https"]
+  end
+
   config :live_xl, LiveXLWeb.Endpoint,
-    url: [host: host || "example.com", port: phx_port || 443, scheme: scheme || "https"],
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
