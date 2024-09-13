@@ -74,7 +74,7 @@ jobs:
         with:
           artifacts: ${{ steps.archive.outputs.archive_file }}
           token: "${{ secrets.GITHUB_TOKEN }}"
-          name: "Build ${{ github.sha }}"
+          name: "Build SHA ${{ github.sha }}"
           removeArtifacts: false
           allowUpdates: true
           replacesArtifacts: true
