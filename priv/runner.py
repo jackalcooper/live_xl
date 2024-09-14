@@ -16,10 +16,16 @@ import time
 from time import sleep
 import platform
 import shutil
+import traceback
 
 if platform.system() == "Linux" and shutil.which("nvidia-smi") != None:
-    import lightning
-    import torch
+    try:
+        import lightning
+        import torch
+    except Exception:
+        print("Failed to initialize lightning or torch.")
+        full_traceback = traceback.format_exc()
+        print(full_traceback)
 else:
     import argparse
 
@@ -50,8 +56,9 @@ def recv_jsonl(stream):
         if not line:
             return None  # EOF or empty line
         return json.loads(line)
-    except Exception as e:
-        return {"error": str(e)}
+    except Exception:
+        full_traceback = traceback.format_exc()
+        return {"error": full_traceback}
 
 
 def recv_loop_jsonl(stream):
@@ -111,7 +118,7 @@ if __name__ == "__main__":
                     {
                         "action": "reply",
                         "ref": message["ref"] if "ref" in message else "undefined",
-                        "error": str(e),
+                        "error": full_traceback,
                     },
                     output,
                 )

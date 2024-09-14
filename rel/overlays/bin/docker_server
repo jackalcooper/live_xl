@@ -1,7 +1,8 @@
 #!/bin/sh
 set -eu
 
-LIVE_XL_LIGHTNING_ARGS="${LIVE_XL_LIGHTNING_ARGS:---base $PWD/stable-diffusion-xl-base-1.0 --repo=$PWD/SDXL-Lightning}"
+cache_dir=$PWD/cached_pipe/gpu-@{infer_gpu_id}
+LIVE_XL_LIGHTNING_ARGS="${LIVE_XL_LIGHTNING_ARGS:---base $PWD/stable-diffusion-xl-base-1.0 --repo=$PWD/SDXL-Lightning} --save_graph --load_graph --save_graph_dir=${cache_dir} --load_graph_dir=${cache_dir}"
 working_dir=$PWD
 cd -P -- "$(dirname -- "$0")"
 docker run -it --rm --gpus all --shm-size 12g --ipc=host --security-opt seccomp=unconfined --privileged=true --name onediff-demo-$USER \
