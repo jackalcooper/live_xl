@@ -86,6 +86,7 @@ defmodule LiveXLWeb.PromptLive do
       end)
       |> Map.put("saved_image", saved_image)
       |> Map.put("seed", seed)
+      |> Map.put("num_inference_steps", LiveXL.Infer.lightning_num_steps())
       |> Map.put("height", 1024)
       |> Map.put("width", 1024)
       |> Map.put("guidance_scale", 0)

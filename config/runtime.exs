@@ -137,3 +137,6 @@ end
 if s = System.get_env("LIVE_XL_LIGHTNING_ARGS") do
   config :live_xl, LiveXL.Infer, lightning_args: String.split(s, [" ", "\n"], trim: true)
 end
+
+config :live_xl, LiveXL.Infer,
+  lightning_num_steps: String.to_integer(System.get_env("LIVE_XL_LIGHTNING_NUM_STEPS", "2"))
