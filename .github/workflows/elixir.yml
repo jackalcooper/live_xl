@@ -63,6 +63,7 @@ jobs:
           archive_file_full_zip="${archive_file_full}.zip"
           cd _build/prod/rel
           tar -cvf ${archive_file_full} live_xl
+          cd -
           zip ${archive_file_full_zip} ${archive_file}
           echo "archive_file=${archive_file}" >> $GITHUB_OUTPUT
           echo "archive_file_full_zip=${archive_file_full_zip}" >> $GITHUB_OUTPUT
