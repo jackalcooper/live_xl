@@ -109,7 +109,11 @@ if config_env() == :prod do
 end
 
 cuda_dev_ids_str =
-  System.get_env("LIVE_XL_CUDA_DEVICES") ||
+  case System.get_env("LIVE_XL_CUDA_DEVICES") do
+    nil -> nil
+    "" -> nil
+    devices -> devices
+  end ||
     if nvidia_smi = System.find_executable("nvidia-smi") do
       {output, 0} = System.cmd(nvidia_smi, ["--query-gpu=index", "--format=csv,noheader"])
       output
