@@ -13,7 +13,7 @@ parser.add_argument(
     "--base", type=str, default="stabilityai/stable-diffusion-xl-base-1.0"
 )
 parser.add_argument("--repo", type=str, default="ByteDance/SDXL-Lightning")
-parser.add_argument("--cpkt", type=str, default="sdxl_lightning_4step_unet.safetensors")
+parser.add_argument("--cpkt", type=str, default="sdxl_lightning_2step_unet.safetensors")
 parser.add_argument("--variant", type=str, default="fp16")
 parser.add_argument(
     "--prompt",
