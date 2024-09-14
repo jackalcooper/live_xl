@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+
+LIVE_XL_LIGHTNING_ARGS="${LIVE_XL_LIGHTNING_ARGS:---base $PWD/stable-diffusion-xl-base-1.0 --repo=$PWD/SDXL-Lightning}"
+working_dir=$PWD
+cd -P -- "$(dirname -- "$0")"
+docker run -it --rm --gpus all --shm-size 12g --ipc=host --security-opt seccomp=unconfined --privileged=true --name onediff-demo-$USER \
+  -e LIVE_XL_CUDA_DEVICES=${LIVE_XL_CUDA_DEVICES} -e HF_HUB_OFFLINE=1 -e SECRET_KEY_BASE=V4p3Ece1NG5t50SLq3VIuS8CTVq3/UzygEGBlGWana7j2UMP73NfRS3PZLXzX8EF \
+  -e LIVE_XL_LIGHTNING_ARGS="${LIVE_XL_LIGHTNING_ARGS}" \
+  --network=host \
+  -v $working_dir:$working_dir -w $working_dir -v $HOME/onediff:$HOME/onediff registry.cn-beijing.aliyuncs.com/oneflow/onediff:cu118 live_xl/bin/server

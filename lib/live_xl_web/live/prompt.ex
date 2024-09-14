@@ -6,6 +6,7 @@ defmodule LiveXLWeb.PromptLive do
   attr :field, Phoenix.HTML.FormField
   attr :class, :string
   attr :rest, :global, include: ~w(type)
+  require Logger
 
   def form_input(assigns) do
     assigns = assigns |> Map.put_new(:type, nil)
@@ -81,9 +82,13 @@ defmodule LiveXLWeb.PromptLive do
 
     args =
       args
+      |> Map.reject(fn
+        {k, _} when is_bitstring(k) -> String.starts_with?(k, "_")
+        _ -> false
+      end)
       |> Map.put("saved_image", saved_image)
       |> Map.put("seed", seed)
-      |> Map.put("num_inference_steps", 2)
+      |> Map.put("num_inference_steps", LiveXL.Infer.lightning_num_steps())
       |> Map.put("height", 1024)
       |> Map.put("width", 1024)
       |> Map.put("guidance_scale", 0)
@@ -98,6 +103,7 @@ defmodule LiveXLWeb.PromptLive do
           %{
             "error" => _
           }}} ->
+          Logger.debug("args: #{inspect(args)}")
           {e2e_time, 0.0, ~p"/images/onediff_logo.png"}
 
         {_,

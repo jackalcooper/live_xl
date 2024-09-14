@@ -33,13 +33,19 @@ if config_env() == :prod do
       You can generate one by calling: mix phx.gen.secret
       """
 
-  host = System.get_env("PHX_HOST") || "example.com"
+  phx_port = System.get_env("PHX_PORT")
+  scheme = System.get_env("PHX_SCHEME")
+  check_origin = System.get_env("PHX_CHECK_ORIGIN") in ~w{1 true True}
   port = String.to_integer(System.get_env("PORT") || "4000")
 
   config :live_xl, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
+  if host = System.get_env("PHX_HOST") do
+    config :live_xl, LiveXLWeb.Endpoint,
+      url: [host: host || "example.com", port: phx_port || 443, scheme: scheme || "https"]
+  end
+
   config :live_xl, LiveXLWeb.Endpoint,
-    url: [host: host, port: 443, scheme: "https"],
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
@@ -48,6 +54,7 @@ if config_env() == :prod do
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: port
     ],
+    check_origin: check_origin,
     secret_key_base: secret_key_base
 
   # ## SSL Support
@@ -102,7 +109,11 @@ if config_env() == :prod do
 end
 
 cuda_dev_ids_str =
-  System.get_env("LIVE_XL_CUDA_DEVICES") ||
+  case System.get_env("LIVE_XL_CUDA_DEVICES") do
+    nil -> nil
+    "" -> nil
+    devices -> devices
+  end ||
     if nvidia_smi = System.find_executable("nvidia-smi") do
       {output, 0} = System.cmd(nvidia_smi, ["--query-gpu=index", "--format=csv,noheader"])
       output
@@ -126,3 +137,6 @@ end
 if s = System.get_env("LIVE_XL_LIGHTNING_ARGS") do
   config :live_xl, LiveXL.Infer, lightning_args: String.split(s, [" ", "\n"], trim: true)
 end
+
+config :live_xl, LiveXL.Infer,
+  lightning_num_steps: String.to_integer(System.get_env("LIVE_XL_LIGHTNING_NUM_STEPS", "2"))

@@ -107,13 +107,13 @@ if __name__ == "__main__":
             try:
                 args = message["payload"]["args"]
                 seed = args.pop("seed", 1)
+                saved_image = args.pop("saved_image")
                 args["generator"] = torch.Generator(device="cuda").manual_seed(seed)
                 start_time = time.time()
                 images = lightning.pipe(**args).images
                 end_time = time.time()
-                images[0].save(args["saved_image"])
-            except Exception:
-                full_traceback = traceback.format_exc()
+                images[0].save(saved_image)
+            except Exception as e:
                 send_jsonl(
                     {
                         "action": "reply",

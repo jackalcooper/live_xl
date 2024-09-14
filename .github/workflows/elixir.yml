@@ -74,8 +74,8 @@ jobs:
         with:
           artifacts: ${{ steps.archive.outputs.archive_file }}
           token: "${{ secrets.GITHUB_TOKEN }}"
-          tag: "latest"
-          name: "latest"
+          name: "Build SHA ${{ github.sha }}"
+          tag: "rel-sha-${{ github.sha }}"
           removeArtifacts: false
           allowUpdates: true
           replacesArtifacts: true

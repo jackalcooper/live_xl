@@ -24,6 +24,16 @@ defmodule LiveXL.Infer do
     end
   end
 
+  def lightning_num_steps() do
+    with {:ok, v} <- Application.fetch_env(:live_xl, __MODULE__),
+         true <- Keyword.has_key?(v, :lightning_num_steps) do
+      v[:lightning_num_steps]
+    else
+      _ ->
+        2
+    end
+  end
+
   @doc """
   sync a pool to unsure python side is ready for receiving actions
   """
