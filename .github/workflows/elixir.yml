@@ -60,9 +60,12 @@ jobs:
           formatted_date=$(date +'%Y%m%d%H%M')
           archive_file="live_xl_rel_${{ matrix.runs-on }}_${formatted_date}.tar"
           archive_file_full="${PWD}/${archive_file}"
+          archive_file_full_zip="${archive_file_full}.zip"
           cd _build/prod/rel
           tar -cvf ${archive_file_full} live_xl
+          zip ${archive_file_full_zip} ${archive_file_full}
           echo "archive_file=${archive_file}" >> $GITHUB_OUTPUT
+          echo "archive_file_full_zip=${archive_file_full_zip}" >> $GITHUB_OUTPUT
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.archive.outputs.archive_file }}
@@ -72,7 +75,7 @@ jobs:
         uses: ncipollo/release-action@v1.12.0
         if: github.ref == 'refs/heads/main' || contains(github.event.pull_request.labels.*.name, 'publish_release')
         with:
-          artifacts: ${{ steps.archive.outputs.archive_file }}
+          artifacts: ${{ steps.archive.outputs.archive_file_full_zip }}
           token: "${{ secrets.GITHUB_TOKEN }}"
           name: "Build SHA ${{ github.sha }}"
           tag: "rel-sha-${{ github.sha }}"
