@@ -20,9 +20,9 @@ defmodule LiveXL.Infer do
       v[:lightning_args]
     else
       _ ->
-        ~w[--base /share_nfs/hf_models/stable-diffusion-xl-base-1.0 --repo /share_nfs/hf_models/SDXL-Lightning --cpkt sdxl_lightning_2step_unet.safetensors --save_graph --load_graph --save_graph_dir=cached_pipe@{infer_process_id} --load_graph_dir=cached_pipe@{infer_process_id}]
+        ~w[--base /share_nfs/hf_models/stable-diffusion-xl-base-1.0 --repo /share_nfs/hf_models/SDXL-Lightning --cpkt sdxl_lightning_2step_unet.safetensors --save_graph --load_graph --save_graph_dir=cached_pipe@{infer_gpu_id} --load_graph_dir=cached_pipe@{infer_gpu_id}]
     end
-    |> Enum.map(&String.replace(&1, "@{infer_process_id}", "#{id}"))
+    |> Enum.map(&String.replace(&1, "@{infer_gpu_id}", "#{id}"))
   end
 
   def lightning_num_steps() do
