@@ -57,7 +57,7 @@ defmodule LiveXL.WorkerPool do
      fn ->
        port =
          LiveXL.Infer.start_py(
-           args: LiveXL.Infer.lightning_args() ++ (opts[:args] || []),
+           args: LiveXL.Infer.lightning_args(gpu_id) ++ (opts[:args] || []),
            env: [{~c"CUDA_VISIBLE_DEVICES", ~c"#{gpu_id}"}]
          )
          |> LiveXL.Infer.sync("[gpu##{gpu_id}] syncing script start")

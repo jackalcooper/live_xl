@@ -14,14 +14,15 @@ defmodule LiveXL.Infer do
     ])
   end
 
-  def lightning_args() do
+  def lightning_args(id) do
     with {:ok, v} <- Application.fetch_env(:live_xl, __MODULE__),
          true <- Keyword.has_key?(v, :lightning_args) do
       v[:lightning_args]
     else
       _ ->
-        ~w{--base /share_nfs/hf_models/stable-diffusion-xl-base-1.0 --repo /share_nfs/hf_models/SDXL-Lightning --cpkt sdxl_lightning_2step_unet.safetensors --save_graph --load_graph}
+        ~w[--base /share_nfs/hf_models/stable-diffusion-xl-base-1.0 --repo /share_nfs/hf_models/SDXL-Lightning --cpkt sdxl_lightning_2step_unet.safetensors --save_graph --load_graph --save_graph_dir=cached_pipe@{infer_process_id} --load_graph_dir=cached_pipe@{infer_process_id}]
     end
+    |> Enum.map(&String.replace(&1, "@{infer_process_id}", "#{id}"))
   end
 
   def lightning_num_steps() do
