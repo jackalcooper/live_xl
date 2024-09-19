@@ -132,12 +132,14 @@ defmodule LiveXLWeb.PromptLive do
                    """
                    |> String.split("\n", trim: true)
 
-  @impl true
-  def mount(_params, _session, socket) do
+  def default_prompt() do
     default_prompt = "A cinematic shot of a baby raccoon wearing an intricate italian priest robe"
+    [default_prompt | @default_prompts] |> Enum.random()
+  end
 
-    default_prompt = [default_prompt | @default_prompts] |> Enum.random()
-    form = %{"seed" => 1, "prompt" => default_prompt}
+  @impl true
+  def mount(params, _session, socket) do
+    form = %{"seed" => 1, "prompt" => default_prompt()}
 
     if connected?(socket) do
       infer(form)
@@ -148,6 +150,17 @@ defmodule LiveXLWeb.PromptLive do
       |> assign(:image, ~p"/images/onediff_logo.png")
       |> assign(:inference_time, 0.0)
       |> assign(:e2e_time, 0.0)
+
+    if params["mode"] == "conf" do
+      auto_play_timeout =
+        if t = params["auto_play_timeout"] do
+          String.to_integer(t)
+        else
+          5_000
+        end
+
+      Process.send_after(self(), {:auto_play, auto_play_timeout}, auto_play_timeout)
+    end
 
     socket =
       socket
@@ -165,6 +178,19 @@ defmodule LiveXLWeb.PromptLive do
   @impl true
   def handle_info({:update_socket, f}, socket) do
     {:noreply, f.(socket)}
+  end
+
+  def handle_info({:auto_play, auto_play_timeout}, socket) do
+    Process.send_after(self(), {:auto_play, auto_play_timeout}, auto_play_timeout)
+
+    socket =
+      assign(
+        socket,
+        :form,
+        Phoenix.Component.to_form(%{"seed" => Enum.random(0..10000), "prompt" => default_prompt()})
+      )
+
+    {:noreply, socket}
   end
 
   defp do_infer(form) do

@@ -24,7 +24,7 @@ defmodule LiveXLWeb.Router do
   scope "/", LiveXLWeb do
     pipe_through :browser
     live "/", PromptLive
-    live "/xl", PromptLive
+    live "/:mode", PromptLive
   end
 
   # Other scopes may use custom stacks.
