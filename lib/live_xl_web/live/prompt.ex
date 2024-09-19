@@ -137,9 +137,13 @@ defmodule LiveXLWeb.PromptLive do
     [default_prompt | @default_prompts] |> Enum.random()
   end
 
+  def default_seed() do
+    Enum.random(0..10000)
+  end
+
   @impl true
   def mount(params, _session, socket) do
-    form = %{"seed" => 1, "prompt" => default_prompt()}
+    form = %{"seed" => default_seed(), "prompt" => default_prompt()}
 
     if connected?(socket) do
       infer(form)
@@ -183,13 +187,16 @@ defmodule LiveXLWeb.PromptLive do
   def handle_info({:auto_play, auto_play_timeout}, socket) do
     Process.send_after(self(), {:auto_play, auto_play_timeout}, auto_play_timeout)
 
+    form = %{"seed" => default_seed(), "prompt" => default_prompt()}
+
     socket =
       assign(
         socket,
         :form,
-        Phoenix.Component.to_form(%{"seed" => Enum.random(0..10000), "prompt" => default_prompt()})
+        Phoenix.Component.to_form(form)
       )
 
+    infer(form)
     {:noreply, socket}
   end
 
@@ -235,7 +242,8 @@ defmodule LiveXLWeb.PromptLive do
             "error" => _
           }}} ->
           Logger.debug("args: #{inspect(args)}")
-          {e2e_time, 0.0, ~p"/images/onediff_logo.png"}
+
+          {e2e_time, 0.0, nil}
 
         {_,
          {e2e_time,
