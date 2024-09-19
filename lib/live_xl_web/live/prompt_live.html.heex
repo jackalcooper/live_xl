@@ -45,6 +45,11 @@
           <%= if @image && @inference_time do %>
             <img id="imageDisplay" src={@image} alt="Dynamic Image" />
           <% end %>
+          <%= if is_nil @image do %>
+            <div class="flex items-center justify-center w-full h-[512px] bg-zinc-50 text-zinc-400">
+              <pre><%= inspect(@form, pretty: true)  %></pre>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>
