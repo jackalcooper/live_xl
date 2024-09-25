@@ -230,6 +230,10 @@ defmodule LiveXLWeb.PromptLive do
       |> Map.put("height", 1024)
       |> Map.put("width", 1024)
       |> Map.put("guidance_scale", 0)
+      |> Map.put(
+        "negative_prompt",
+        "blurry, blur, text, watermark, render, 3D, NSFW, nude, CGI, monochrome, B&W, cartoon, painting, smooth, plastic, blurry, low-resolution, deep-fried, oversaturated"
+      )
 
     res =
       :timer.tc(fn -> LiveXL.Infer.run(%{action: "infer_lightning", payload: %{args: args}}) end)
